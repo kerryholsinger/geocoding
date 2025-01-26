@@ -54,5 +54,4 @@ Scripts
 **prettierignore
 **prettierrc
 **.forceignore
-*.md
 **package.json
