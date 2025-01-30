@@ -5,9 +5,8 @@ The **Geocoding Invocable Action** is a Salesforce Queueable class that integrat
 ## Features  
 
 - **Flexible**: Works with any object by providing address field API names.  
-- **Powerful Data Retrieval**: Retrieves geocoding data such as latitude, longitude, county, ZIP+4, census tract, and FIPS code.  
-- **Scalable**: Leverages asynchronous processing for reliable performance, even with high volumes of records.  
-- **Easy Integration**: Can be seamlessly triggered via Salesforce Flow.  
+- **Automated Data Retrieval**: Retrieves geocoding data such as latitude, longitude, county, ZIP+4, census tract, and FIPS code.  
+- **Easy Setup**: Can be seamlessly triggered via Salesforce Flow.  
 
 ## How It Works  
 
