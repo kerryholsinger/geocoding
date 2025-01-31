@@ -46,11 +46,7 @@ private class GeocodingQueueable_Test {
       WHERE Id = :account.Id
     ];
 
-    Assert.areEqual(
-      '60083-9630',
-      updatedAccount.BillingPostalCode,
-      'Expected the updated BillingPostalCode to match the mock response value of 60083-9630.'
-    );
+    Assert.areEqual('60083-9630', updatedAccount.BillingPostalCode, 'Expected the updated BillingPostalCode to match the mock response value of 60083-9630.');
   }
 
   private static String getMockResponse() {

@@ -35,6 +35,7 @@ public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
    * @param context The queueable context containing the job details.
    */
   public void execute(QueueableContext context) {
+    validateFields();
     initializeRequestVariables();
     validateAddress();
     sendRequest();
@@ -44,6 +45,28 @@ public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
   // ---------------------------------------
   // ------ Variable Initialization --------
   // ---------------------------------------
+
+  private void validateFields() {
+    List<String> fieldsToCheck = new List<String>{
+      parameters.streetField,
+      parameters.cityField,
+      parameters.stateField,
+      parameters.zipField,
+      parameters.countyField,
+      parameters.latitudeField,
+      parameters.longitudeField,
+      parameters.censusTractField,
+      parameters.fipsCodeField
+    };
+
+    Map<String, Schema.SObjectField> objectFields = parameters.record.getSObjectType().getDescribe().fields.getMap();
+
+    for (String field : fieldsToCheck) {
+      if (String.isNotBlank(field) && !objectFields.containsKey(field)) {
+        throw new IllegalArgumentException('Field does not exist on the provided record: ' + field);
+      }
+    }
+  }
 
   /**
    * @description Initializes the request variables, including address components and census year.
