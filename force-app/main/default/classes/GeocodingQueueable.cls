@@ -6,7 +6,8 @@ public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
   private static final String LONGITUDE_PATH = 'results.[0].location.lng';
   private static final String ZIP_PLUS_FOUR_PATH = 'results.[0].fields.zip4.zip9.[0]';
 
-  private GeocodingParameters parameters;
+  private GeocodingParameters parameters; // TODO: Delete this line
+  private GeocodingInvocable.Parameters parametersNEW;
   private HttpResponse response;
   private String street;
   private String city;
@@ -15,20 +16,22 @@ public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
   private String censusYear;
   private Boolean censusDataAvailable = false;
 
+  /**
+   * @description Constructor for GeocodingQueueable.
+   * @param invocableParameters The geocoding parameters containing the address and other details.
+   */
+  public GeocodingQueueable(GeocodingInvocable.Parameters invocableParameters) {
+    this.parametersNEW = invocableParameters;
+  }
+
+  // TODO: Delete this constructor
+  public GeocodingQueueable() {
+    System.debug('DELTE THIS AFTER REFACTORING');
+  }
+
   // ---------------------------------------
   // ------ Queueable Execution ------------
   // ---------------------------------------
-
-  /**
-   * @description Invocable action to enqueue a geocoding job with the provided geocoding parameters.
-   * @param inputParameters List of GeocodingParameters containing the address and other geocoding details.
-   */
-  @InvocableMethod(label='Geocode an Address')
-  public static void enqueueJob(List<GeocodingParameters> inputParameters) {
-    GeocodingQueueable queueable = new GeocodingQueueable();
-    queueable.parameters = inputParameters[0];
-    System.enqueueJob(queueable);
-  }
 
   /**
    * @description Executes the geocoding job by validating the address, sending an HTTP request, and processing the response.
@@ -48,18 +51,18 @@ public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
 
   private void validateFields() {
     List<String> fieldsToCheck = new List<String>{
-      parameters.streetField,
-      parameters.cityField,
-      parameters.stateField,
-      parameters.zipField,
-      parameters.countyField,
-      parameters.latitudeField,
-      parameters.longitudeField,
-      parameters.censusTractField,
-      parameters.fipsCodeField
+      parametersNEW.streetField,
+      parametersNEW.cityField,
+      parametersNEW.stateField,
+      parametersNEW.zipField,
+      parametersNEW.countyField,
+      parametersNEW.latitudeField,
+      parametersNEW.longitudeField,
+      parametersNEW.censusTractField,
+      parametersNEW.fipsCodeField
     };
 
-    Map<String, Schema.SObjectField> objectFields = parameters.record.getSObjectType().getDescribe().fields.getMap();
+    Map<String, Schema.SObjectField> objectFields = parametersNEW.records[0].getSObjectType().getDescribe().fields.getMap();
 
     for (String field : fieldsToCheck) {
       if (String.isNotBlank(field) && !objectFields.containsKey(field)) {
