@@ -1,11 +1,11 @@
 /**
  * @description Invocable action for bulk geocoding addresses on any object.
- * Accepts a collection of sObjects and enqueues a Queueable job for asynchronous processing.
+ * Accepts a collection of sObjects and enqueues a job for asynchronous processing.
  *
  * @author: Kerry Holsinger
  * @group: Geocoding
- * @created: Jan 2025
- * @tests: TBD
+ * @created: Feb 2025
+ * @tests: _Test
  */
 public class GeocodingInvocable {
   /**
@@ -21,8 +21,9 @@ public class GeocodingInvocable {
   }
 
   /**
-   * Validates that the specified fields exist on the provided records.
-   * Throws an exception if any of the fields do not exist on the object.
+   * Validates that the record collection is not empty and the specified fields exist on the object.
+   * @param parameters The input parameters containing the record collection and field names to validate.
+   * @throws IllegalArgumentException if the record collection is empty or if any specified field is missing.
    */
   private static void validateInputParameters(Parameters parameters) {
     // Ensure the provided record collection is not empty
@@ -32,7 +33,7 @@ public class GeocodingInvocable {
 
     Map<String, Schema.SObjectField> objectFields = parameters.records[0].getSObjectType().getDescribe().fields.getMap();
 
-    List<String> inputFieldsToCheck = new List<String>{
+    Set<String> inputFieldsToCheck = new Set<String>{
       parameters.streetField,
       parameters.cityField,
       parameters.stateField,
@@ -45,9 +46,9 @@ public class GeocodingInvocable {
     };
 
     // Ensure all fields provded in the input parameters exist on the object
-    for (String field : inputFieldsToCheck) {
-      if (String.isNotBlank(field) && !objectFields.containsKey(field)) {
-        throw new IllegalArgumentException('Field does not exist on the provided record: ' + field);
+    for (String inputField : inputFieldsToCheck) {
+      if (String.isNotBlank(inputField) && !objectFields.containsKey(inputField)) {
+        throw new IllegalArgumentException('Field does not exist on the provided record: ' + inputField);
       }
     }
   }
