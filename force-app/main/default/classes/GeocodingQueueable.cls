@@ -12,7 +12,7 @@ public class GeocodingQueueable implements Queueable {
   private GeocodingAPIService api;
 
   /**
-   * Constructs a new Queueable job for geocoding.
+   * Constructs a new Queueable job, setting the paramaters for geocoding and intialilizing the API service.
    * @param invocableParameters The parameters used for geocoding requests.
    */
   public GeocodingQueueable(GeocodingInvocable.Parameters invocableParameters) {

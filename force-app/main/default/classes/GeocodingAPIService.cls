@@ -79,14 +79,14 @@ public class GeocodingAPIService implements Database.AllowsCallouts {
 
     for (SObject record : parameters.records) {
       String recordId = (String) record.get('Id');
-      Map<String, String> address = new Map<String, String>();
+      Map<String, String> addressMap = new Map<String, String>();
 
-      address.put('street', (String) record.get(parameters.streetField));
-      address.put('city', (String) record.get(parameters.cityField));
-      address.put('state', (String) record.get(parameters.stateField));
-      address.put('postal_code', (String) record.get(parameters.zipField));
+      addressMap.put('street', (String) record.get(parameters.streetField));
+      addressMap.put('city', (String) record.get(parameters.cityField));
+      addressMap.put('state', (String) record.get(parameters.stateField));
+      addressMap.put('postal_code', (String) record.get(parameters.zipField));
 
-      geocodeRequest.put(recordId, address);
+      geocodeRequest.put(recordId, addressMap);
     }
     return JSON.serialize(geocodeRequest);
   }
