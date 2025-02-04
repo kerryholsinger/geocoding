@@ -12,7 +12,7 @@ public class GeocodingAPIService implements Database.AllowsCallouts {
   private static final String GEOCODIO_ENDPOINT = 'https://api.geocod.io/v1.7/geocode?api_key=';
 
   private GeocodingInvocable.Parameters parameters;
-  private String censusYear;
+  private String censusYear = GeocodingUtility.getCensusYear();
 
   /**
    * Initializes the GeocodingAPIService with the given parameters.
@@ -21,9 +21,6 @@ public class GeocodingAPIService implements Database.AllowsCallouts {
    */
   public GeocodingAPIService(GeocodingInvocable.Parameters parameters) {
     this.parameters = parameters;
-    this.censusYear = String.isBlank(System.Label.Geocodio_Census_Year)
-      ? String.valueOf(Date.today().year() - 2) // Default to 2 years ago to ensure Census data is available
-      : System.Label.Geocodio_Census_Year;
   }
 
   /**
