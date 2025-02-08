@@ -13,7 +13,7 @@ public class GeocodingInvocable {
    * @param invocableParameters List of geocoding parameters containing the address fields and other geocoding details.
    */
   @InvocableMethod(label='Address Gecoding' description='Geocode a collection of addresses on any object')
-  public static void enqueueGeocodingJob(List<Parameters> invocableParameters) {
+  public static void enqueueJob(List<Parameters> invocableParameters) {
     for (Parameters parameters : invocableParameters) {
       validateParameters(parameters);
       System.enqueueJob(new GeocodingQueueable(parameters));
