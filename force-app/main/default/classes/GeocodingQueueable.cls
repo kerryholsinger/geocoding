@@ -7,7 +7,7 @@
  * @created Feb 2025
  * @tests _Test
  */
-public class GeocodingQueueable implements Queueable {
+public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
   private GeocodingInvocable.Parameters parameters;
   private GeocodingAPIService api;
 

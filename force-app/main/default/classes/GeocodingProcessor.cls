@@ -8,7 +8,7 @@
  * @created: Feb 2025
  * @tests: _Test
  */
-public class GeocodingProcessor {
+public with sharing class GeocodingProcessor {
   private GeocodingInvocable.Parameters parameters;
   private String censusYear = GeocodingUtility.getCensusYear();
 
@@ -62,6 +62,7 @@ public class GeocodingProcessor {
     updateFieldIfValid(record, parameters.longitudeField, longitudeResult);
     updateFieldIfValid(record, parameters.censusTractField, censusTractResult);
     updateFieldIfValid(record, parameters.fipsCodeField, fipsCodeResult);
+    // Ensure zip is updated only if zip+4 is requested
     if (parameters.includeZipPlusFour) {
       updateFieldIfValid(record, parameters.zipField, zipPlusFourResult);
     }
@@ -109,7 +110,8 @@ public class GeocodingProcessor {
    */
   private String getCounty(Map<String, Object> geocodingResult) {
     Map<String, Object> addressComponents = (Map<String, Object>) geocodingResult.get('address_components');
-    return (String) addressComponents.get('county');
+    String county = (String) addressComponents.get('county');
+    return county.replace(' County', '');
   }
 
   /**
@@ -178,7 +180,7 @@ public class GeocodingProcessor {
    */
   private String getFipsCode(Map<String, Object> geocodingResult) {
     Map<String, Object> census = getCensus(geocodingResult);
-    return (String) census.get('fips_code');
+    return (String) census.get('full_fips');
   }
 
   /**
@@ -189,7 +191,8 @@ public class GeocodingProcessor {
   private String getZipPlusFour(Map<String, Object> geocodingResult) {
     Map<String, Object> fields = getFields(geocodingResult);
     Map<String, Object> zip4 = (Map<String, Object>) fields.get('zip4');
-    return (String) zip4.get('zip9');
+    List<Object> zip9 = (List<Object>) zip4.get('zip9');
+    return (String) zip9[0];
   }
 
   /**

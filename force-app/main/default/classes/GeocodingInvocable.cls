@@ -1,6 +1,6 @@
 /**
- * @description Invocable action for bulk geocoding addresses on any object.
- * Accepts a collection of sObjects and enqueues a job for asynchronous processing.
+ * Invocable action for bulk geocoding addresses on any object.
+ * Accepts a collection of sObjects and enqueues an asynchrounous job.
  *
  * @author: Kerry Holsinger
  * @group: Geocoding
@@ -15,17 +15,17 @@ public class GeocodingInvocable {
   @InvocableMethod(label='Address Gecoding' description='Geocode a collection of addresses on any object')
   public static void enqueueGeocodingJob(List<Parameters> invocableParameters) {
     for (Parameters parameters : invocableParameters) {
-      validateInputParameters(parameters);
+      validateParameters(parameters);
       System.enqueueJob(new GeocodingQueueable(parameters));
     }
   }
 
   /**
    * Validates that the record collection is not empty and the specified fields exist on the object.
-   * @param parameters The input parameters containing the record collection and field names to validate.
+   * @param parameters The parameters containing the record collection and field names to validate.
    * @throws IllegalArgumentException if the record collection is empty or if any specified field is missing.
    */
-  private static void validateInputParameters(Parameters parameters) {
+  private static void validateParameters(Parameters parameters) {
     // Ensure the provided record collection is not empty
     if (parameters.records.isEmpty()) {
       throw new IllegalArgumentException('The provided record collection is empty.');
@@ -33,7 +33,7 @@ public class GeocodingInvocable {
 
     Map<String, Schema.SObjectField> objectFields = parameters.records[0].getSObjectType().getDescribe().fields.getMap();
 
-    Set<String> inputFieldsToCheck = new Set<String>{
+    Set<String> parameterFields = new Set<String>{
       parameters.streetField,
       parameters.cityField,
       parameters.stateField,
@@ -46,9 +46,9 @@ public class GeocodingInvocable {
     };
 
     // Ensure all fields provded in the input parameters exist on the object
-    for (String inputField : inputFieldsToCheck) {
-      if (String.isNotBlank(inputField) && !objectFields.containsKey(inputField)) {
-        throw new IllegalArgumentException('Field does not exist on the provided record: ' + inputField);
+    for (String field : parameterFields) {
+      if (String.isNotBlank(field) && !objectFields.containsKey(field)) {
+        throw new IllegalArgumentException('Field does not exist on the provided record: ' + field);
       }
     }
   }
