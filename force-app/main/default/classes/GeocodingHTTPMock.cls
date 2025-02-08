@@ -28,41 +28,31 @@ public class GeocodingHTTPMock implements HttpCalloutMock {
   }
 
   private String getSucessResponse() {
-    String json =
+    String jsonPart1 = '{"results":{"' + recordId + '":{"response":{"results":[';
+    String jsonPart2 =
       '{' +
-      '    "results": {' +
-      '        "' +
-      recordId +
-      '": {' +
-      '            "response": {' +
-      '                "results": [' +
-      '                    {' +
-      '                        "address_components": {' +
-      '                            "county": "Lake County"' +
-      '                        },' +
-      '                        "location": {' +
-      '                            "lat": 42.413297,' +
-      '                            "lng": -87.941093' +
-      '                        },' +
-      '                        "fields": {' +
-      '                            "census": {' +
-      '                                "2024": {' +
-      '                                    "tract_code": "861505",' +
-      '                                    "full_fips": "170978615051002"' +
-      '                                }' +
-      '                            },' +
-      '                            "zip4": {' +
-      '                                "zip9": [' +
-      '                                    "60083-9630"' +
-      '                                ]' +
-      '                            }' +
-      '                        }' +
-      '                    }' +
-      '                ]' +
-      '            }' +
-      '        }' +
-      '    }' +
-      '}';
-    return json;
+      ' "address_components": {' +
+      '   "county": "Lake County"' +
+      ' },' +
+      ' "location": {' +
+      '   "lat": 42.413297,' +
+      '   "lng": -87.941093' +
+      ' },' +
+      ' "fields": {' +
+      '   "census": {' +
+      '     "2024": {' +
+      '       "tract_code": "861505",' +
+      '       "full_fips": "170978615051002"' +
+      '      }' +
+      '     },' +
+      '   "zip4": {' +
+      '     "zip9": [' +
+      '       "60083-9630"' +
+      '     ]' +
+      '   }' +
+      '  }' +
+      ' }' +
+      ' ]}}}}';
+    return jsonPart1 + jsonPart2;
   }
 }
