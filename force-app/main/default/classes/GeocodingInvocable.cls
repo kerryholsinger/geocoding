@@ -5,7 +5,7 @@
  * @author: Kerry Holsinger
  * @group: Geocoding
  * @created: Feb 2025
- * @tests: _Test
+ * @tests: GeocodingInvocable_Test
  */
 public class GeocodingInvocable {
   /**
@@ -30,9 +30,7 @@ public class GeocodingInvocable {
     if (parameters.records.isEmpty()) {
       throw new IllegalArgumentException('The provided record collection is empty.');
     }
-
     Map<String, Schema.SObjectField> objectFields = parameters.records[0].getSObjectType().getDescribe().fields.getMap();
-
     Set<String> parameterFields = new Set<String>{
       parameters.streetField,
       parameters.cityField,
@@ -44,7 +42,6 @@ public class GeocodingInvocable {
       parameters.censusTractField,
       parameters.fipsCodeField
     };
-
     // Ensure all fields provded in the input parameters exist on the object
     for (String field : parameterFields) {
       if (String.isNotBlank(field) && !objectFields.containsKey(field)) {
