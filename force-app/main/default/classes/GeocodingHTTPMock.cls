@@ -1,4 +1,4 @@
-@isTest
+@IsTest
 public class GeocodingHTTPMock implements HttpCalloutMock {
   private Integer statusCode;
   private String responseType;

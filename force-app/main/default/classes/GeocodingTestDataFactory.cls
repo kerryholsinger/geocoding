@@ -40,6 +40,9 @@ public class GeocodingTestDataFactory {
       when 'success' {
         return getSucessResponse(recordId);
       }
+      when 'no fields' {
+        return getNoFieldsResponse(recordId);
+      }
       when 'error' {
         return '{"error": "You can\'t make this request as it is above your daily maximum."}';
       }
@@ -75,6 +78,21 @@ public class GeocodingTestDataFactory {
       '  }' +
       ' }' +
       ' ]}}}}';
+    return jsonPart1 + jsonPart2;
+  }
+  public static String getNoFieldsResponse(String recordId) {
+    String jsonPart1 = '{"results":{"' + recordId + '":{"response":{"results":[';
+    String jsonPart2 =
+      '{' +
+      ' "address_components": {' +
+      '   "county": "Lake County"' +
+      ' },' +
+      ' "location": {' +
+      '   "lat": 42.413297,' +
+      '   "lng": -87.941093' +
+      ' }' +
+      '}' +
+      ']}}}}';
     return jsonPart1 + jsonPart2;
   }
 }
