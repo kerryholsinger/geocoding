@@ -1,5 +1,5 @@
 /**
- * Unit tests for the GeocodingQueueable class.
+ * Unit tests for the GeocodingQueueable class
  *
  * @author: Kerry Holsinger
  * @group: Geocoding
@@ -7,12 +7,16 @@
  */
 @IsTest
 public class GeocodingQueueable_Test {
+  /**
+   * Verifies that the GeocodingQueueable job enqueues successfully
+   */
   @isTest
   public static void testQueueable() {
     GeocodingInvocable.Parameters parameters = GeocodingTestDataFactory.buildParameters();
+    String recordId = parameters.records[0].id;
 
     Test.startTest();
-    Test.setMock(HttpCalloutMock.class, new GeocodingHTTPMock(200, 'success', parameters.records[0].id));
+    Test.setMock(HttpCalloutMock.class, new GeocodingHTTPMock(200, 'success', recordId));
     GeocodingQueueable queueable = new GeocodingQueueable(parameters);
     System.enqueueJob(queueable);
     Test.stopTest();

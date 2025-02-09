@@ -6,7 +6,7 @@
  * @author Kerry Holsinger
  * @group Geocoding
  * @created Feb 2025
- * @tests _Test
+ * @tests GeocodingAPIService_Test
  */
 public class GeocodingAPIService implements Database.AllowsCallouts {
   private static final String GEOCODIO_ENDPOINT = 'https://api.geocod.io/v1.7/geocode?api_key=';
@@ -89,14 +89,11 @@ public class GeocodingAPIService implements Database.AllowsCallouts {
   }
 
   /**
-   * Validates the response from the Geocodio API. Ensures the response is not null and has a successful status code.
+   * Validates the response from the Geocodio API has a successful status code.
    * @param response The HttpResponse received from the Geocodio API.
-   * @throws CalloutException if the response is null or the status code is not 200.
+   * @throws CalloutException if the response status code is not 200.
    */
   private void validateResponse(HttpResponse response) {
-    if (response == null) {
-      throw new CalloutException('Geocodio API request failed: No response received.');
-    }
     if (response.getStatusCode() != 200) {
       throw new CalloutException('Geocodio API request failed with status code: ' + response.getStatusCode() + '. Response body: ' + response.getBody());
     }
