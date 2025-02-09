@@ -1,6 +1,5 @@
 /**
- * Unit tests for the GeocodingInvocable class.
- * Ensures proper validation, execution, and error handling of the invocable action.
+ * Unit tests for the GeocodingInvocable class
  *
  * @author: Kerry Holsinger
  * @group: Geocoding
@@ -8,43 +7,16 @@
  */
 @isTest
 public class GeocodingInvocable_Test {
-  private final static String BILLING_STREET_FIELD = 'BillingStreet';
-  private final static String BILLING_CITY_FIELD = 'BillingCity';
-  private final static String BILLING_STATE_FIELD = 'BillingState';
-  private final static String BILLING_ZIP_FIELD = 'BillingPostalCode';
-
-  /**
-   * Setup test data for the invocable action.
-   */
-  @testSetup
-  static void setupTestData() {
-    Account account = new Account(
-      Name = 'Test Account',
-      BillingStreet = '37921 N Dilleys Rd',
-      BillingCity = 'Wadsworth',
-      BillingState = 'IL',
-      BillingPostalCode = '60083'
-    );
-    insert account;
-  }
-
   /**
    * Verifies that a valid geocoding request enqueues a Queueable job successfully.
    */
   @isTest
   static void testSuccess() {
-    List<Account> accounts = [SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode FROM Account LIMIT 1];
+    GeocodingInvocable.Parameters parameters = GeocodingTestDataFactory.buildParameters();
 
-    GeocodingInvocable.Parameters params = new GeocodingInvocable.Parameters();
-    params.records = accounts;
-    params.streetField = BILLING_STREET_FIELD;
-    params.cityField = BILLING_CITY_FIELD;
-    params.stateField = BILLING_STATE_FIELD;
-    params.zipField = BILLING_ZIP_FIELD;
-
-    Test.setMock(HttpCalloutMock.class, new GeocodingHTTPMock(200, 'success', accounts[0].Id));
     Test.startTest();
-    GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ params });
+    Test.setMock(HttpCalloutMock.class, new GeocodingHTTPMock(200, 'success', parameters.records[0].id));
+    GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ parameters });
     Test.stopTest();
 
     // Verify that a job was sucessfully enqueued
@@ -56,20 +28,15 @@ public class GeocodingInvocable_Test {
    */
   @isTest
   static void testEmptyRecords() {
-    GeocodingInvocable.Parameters params = new GeocodingInvocable.Parameters();
-    params.records = new List<SObject>(); // Empty record collection
-    params.streetField = BILLING_STREET_FIELD;
-    params.cityField = BILLING_CITY_FIELD;
-    params.stateField = BILLING_STATE_FIELD;
-    params.zipField = BILLING_ZIP_FIELD;
-
+    GeocodingInvocable.Parameters parameters = GeocodingTestDataFactory.buildParameters();
+    parameters.records = new List<SObject>(); // Empty record collection
     try {
-      GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ params });
+      GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ parameters });
       // Immediately fail the test if the expected exception was not thrown
       Assert.fail('Expected IllegalArgumentException was not thrown - empty record collection');
     } catch (IllegalArgumentException e) {
       // Verify that the expected exception was thrown
-      Assert.areEqual('The provided record collection is empty.', e.getMessage(), 'The expected exception was not thrown due to empty record collection');
+      Assert.areEqual('The provided record collection is empty.', e.getMessage(), 'The expected exception was not thrown due - empty record collection');
       // Verify that no jobs were enqueued
       Assert.areEqual(0, [SELECT COUNT() FROM AsyncApexJob WHERE JobType = 'Queueable'], 'Expected no jobs to be enqueued');
     }
@@ -81,17 +48,10 @@ public class GeocodingInvocable_Test {
    */
   @isTest
   static void testInvalidField() {
-    List<Account> accounts = [SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode FROM Account LIMIT 1];
-
-    GeocodingInvocable.Parameters params = new GeocodingInvocable.Parameters();
-    params.records = accounts;
-    params.streetField = BILLING_STREET_FIELD;
-    params.cityField = BILLING_CITY_FIELD;
-    params.stateField = BILLING_STATE_FIELD;
-    params.zipField = 'Invalid_Field__c'; // Invalid field name
-
+    GeocodingInvocable.Parameters parameters = GeocodingTestDataFactory.buildParameters();
+    parameters.zipField = 'Invalid_Field__c'; // Invalid field name
     try {
-      GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ params });
+      GeocodingInvocable.enqueueJob(new List<GeocodingInvocable.Parameters>{ parameters });
       // Immediately fail the test if the expected exception was not thrown
       Assert.fail('Expected IllegalArgumentException was not thrown - invalid field name');
     } catch (IllegalArgumentException e) {

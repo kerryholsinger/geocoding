@@ -5,7 +5,7 @@
  * @author Kerry Holsinger
  * @group Geocoding
  * @created Feb 2025
- * @tests _Test
+ * @tests GeocodingQueueable_Test
  */
 public class GeocodingQueueable implements Queueable, Database.AllowsCallouts {
   private GeocodingInvocable.Parameters parameters;
