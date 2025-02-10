@@ -1,31 +1,35 @@
-# Geocoding Invocable Action for Salesforce  
+# Geocoding Invocable Action for Salesforce
 
-The **Geocoding Invocable Action** is a Salesforce Queueable class that integrates with the Geocodio API to geocode addresses and update Salesforce records with location data. It is designed to work with any Salesforce object using an invocable action in Salesforce Flow.  
+The **Geocoding Invocable Action** integrates with the Geocodio API to geocode addresses and update Salesforce records with geolocation data. Designed for use in Salesforce Flow, it works with any Salesforce object by specifying address field API names.
 
-## Features  
+## Features
 
-- **Flexible**: Works with any object by providing address field API names.  
-- **Automated Data Retrieval**: Retrieves geocoding data such as latitude, longitude, county, ZIP+4, census tract, and FIPS code.  
-- **Easy Setup**: Can be seamlessly triggered via Salesforce Flow.  
+- **Flexible**: Works with any object by providing address field API names.
+- **Automated Data Retrieval**: Retrieves geocoding data such as latitude, longitude, county, ZIP+4, census tract, and FIPS code.
+- **Batch Processing**: Geocodes multiple addresses in a single call for efficiency.
+- **Easy Setup**: Seamlessly integrates with Salesforce Flow with minimal configuration and setup.
 
-## How It Works  
+## How It Works
 
-1. **Trigger Geocoding**: Use Salesforce Flow to determine when geocoding should run (e.g., record creation, update, or custom conditions).  
-2. **Invocable Action**: Use the `Geocode an Address` action in Flow to enqueue a geocoding job.  
-3. **API Integration**: Sends an HTTP request to the Geocodio API and processes the response.  
-4. **Update Records**: Populates specified fields in the target record with geocoding results.  
+1. **Trigger Geocoding**: Salesforce Flow determines when geocoding should run (e.g., record creation, update, or custom conditions).
+2. **Invoke the Action**: The `Address Geocoding` action is called in Flow, processing a collection of records.
+3. **API Call**: An HTTP request is sent to the Geocodio API, and the response is parsed.
+4. **Update Records**: The specified fields in Salesforce are populated with geolocation data.
 
-## Input Parameters  
+## Input Parameters
 
-- **Required**:  
-  - Record (SObject).  
-  - API names of the Street, City, State, and ZIP fields.  
-- **Optional**:  
-  - API names for County, Latitude, Longitude, Census Tract, and FIPS Code fields.  
-  - Option to include ZIP+4.  
+- **Required:**
 
-## Setup  
+  - Record collection (`List<SObject>`)
+  - API names of Street, City, State, and ZIP fields
 
-1. Add your Geocodio API key to the `Geocodio_API_Key` custom label.  
-2. Optionally, set a Census year in the `Geocodio_Census_Year` custom label.  
-3. Use Flow to configure the `Geocode an Address` action and pass the required parameters (e.g., field API names).  
+- **Optional:**
+  - API names for County, Latitude, Longitude, Census Tract, and FIPS Code
+  - Option to include ZIP+4 and append to the specified ZIP field
+
+## Setup
+
+1. **Store API Key**: Add your Geocodio API key to the `Geocodio_API_Key` custom label.
+2. **Set Census Year (Optional)**: Define a census year in the `Geocodio_Census_Year` custom label.
+3. **Configure Flow**: Add the `Address Geocoding` invocable action and specify address field API names.
+4. **Map Data Fields**: Specify which geolocation data points to retrieve by mapping the optional parameters (e.g., set `County__c` as the `County Field API Name` to store county data).
